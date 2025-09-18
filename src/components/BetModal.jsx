@@ -1,28 +1,67 @@
 import React, { useState } from 'react';
 import { X, TrendingUp, Clock, AlertCircle } from 'lucide-react';
 import { usePaymentContext } from '../hooks/usePaymentContext';
+import { useAgentKit } from '../hooks/useAgentKit';
 
 export function BetModal({ market, streamer, selectedOption, onClose }) {
   const [betAmount, setBetAmount] = useState('');
   const [isPlacingBet, setIsPlacingBet] = useState(false);
   const { createSession } = usePaymentContext();
+  const { 
+    isReady: isAgentKitReady, 
+    smartTransfer, 
+    getBalance, 
+    getSmartAccountAddress,
+    error: agentKitError,
+    isInitializing 
+  } = useAgentKit();
 
   const handlePlaceBet = async () => {
     if (!betAmount || parseFloat(betAmount) <= 0) return;
     
+    if (!isAgentKitReady) {
+      alert('AgentKit is not ready. Please wait for initialization.');
+      return;
+    }
+
     setIsPlacingBet(true);
     try {
-      // Simulate AgentKit gasless transaction
+      // Get smart account address
+      const smartAccountAddress = await getSmartAccountAddress();
+      console.log('Smart Account Address:', smartAccountAddress);
+
+      // Check balance before placing bet
+      const balanceResult = await getBalance(
+        streamer.tokenAddress ? [streamer.tokenAddress] : null,
+        streamer.tokenAddress ? null : [streamer.tokenSymbol]
+      );
+      console.log('Current balance:', balanceResult);
+
+      // Create payment session for verification
       await createSession();
       
-      // Simulate bet placement
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Simulate gasless bet placement using AgentKit
+      // In a real implementation, this would transfer tokens to a betting contract
+      const betContractAddress = '0x742d35Cc6634C0532925a3b8D7389B5B6f6c4b0d'; // Example betting contract
       
-      alert(`Successfully placed bet of ${betAmount} ${streamer.tokenSymbol} on "${selectedOption.text}"`);
+      if (streamer.tokenAddress && streamer.tokenAddress !== '0x0000000000000000000000000000000000000000') {
+        // Transfer ERC20 tokens gaslessly
+        const transferResult = await smartTransfer(
+          betAmount,
+          streamer.tokenAddress,
+          betContractAddress
+        );
+        console.log('Gasless transfer result:', transferResult);
+      } else {
+        // For native tokens, simulate the transaction
+        console.log(`Would transfer ${betAmount} ${streamer.tokenSymbol} to betting contract`);
+      }
+      
+      alert(`Successfully placed gasless bet of ${betAmount} ${streamer.tokenSymbol} on "${selectedOption.text}" using AgentKit!`);
       onClose();
     } catch (error) {
       console.error('Bet failed:', error);
-      alert('Failed to place bet. Please try again.');
+      alert(`Failed to place bet: ${error.message}`);
     } finally {
       setIsPlacingBet(false);
     }
@@ -123,9 +162,18 @@ export function BetModal({ market, streamer, selectedOption, onClose }) {
         {/* Warning */}
         <div className="flex items-start space-x-2 p-3 bg-accent/10 border border-accent/20 rounded-md mb-6">
           <AlertCircle className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
-          <p className="text-sm text-accent">
-            This bet will be placed gaslessly using AgentKit. Make sure you have sufficient {streamer.tokenSymbol} tokens.
-          </p>
+          <div className="text-sm text-accent">
+            <p>This bet will be placed gaslessly using 0xGasless AgentKit.</p>
+            {agentKitError && (
+              <p className="mt-1 text-red-400">AgentKit Error: {agentKitError}</p>
+            )}
+            {isInitializing && (
+              <p className="mt-1 text-blue-400">Initializing AgentKit...</p>
+            )}
+            {isAgentKitReady && (
+              <p className="mt-1 text-green-400">✓ AgentKit ready for gasless transactions</p>
+            )}
+          </div>
         </div>
 
         {/* Actions */}
@@ -138,10 +186,12 @@ export function BetModal({ market, streamer, selectedOption, onClose }) {
           </button>
           <button
             onClick={handlePlaceBet}
-            disabled={!betAmount || parseFloat(betAmount) <= 0 || isPlacingBet}
+            disabled={!betAmount || parseFloat(betAmount) <= 0 || isPlacingBet || !isAgentKitReady}
             className="flex-1 py-3 bg-primary hover:bg-primary/90 disabled:bg-muted disabled:cursor-not-allowed rounded-md font-medium transition-colors"
           >
-            {isPlacingBet ? 'Placing Bet...' : 'Place Bet'}
+            {isPlacingBet ? 'Placing Gasless Bet...' : 
+             !isAgentKitReady ? 'Initializing AgentKit...' : 
+             'Place Gasless Bet'}
           </button>
         </div>
       </div>

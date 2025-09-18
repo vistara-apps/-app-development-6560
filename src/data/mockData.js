@@ -9,7 +9,7 @@ export const mockStreamers = [
     tokenSymbol: 'NINJA',
     tokenPrice: '2.45',
     priceChange: 5.2,
-    creatorTokenAddress: '0x123...',
+    tokenAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', // USDC on Base
     socialLinks: {
       twitch: 'https://twitch.tv/ninja',
       twitter: 'https://twitter.com/ninja'
@@ -25,7 +25,7 @@ export const mockStreamers = [
     tokenSymbol: 'SHROUD',
     tokenPrice: '1.89',
     priceChange: -2.1,
-    creatorTokenAddress: '0x456...',
+    tokenAddress: '0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb', // DAI on Base
     socialLinks: {
       twitch: 'https://twitch.tv/shroud',
       twitter: 'https://twitter.com/shroud'
@@ -41,7 +41,7 @@ export const mockStreamers = [
     tokenSymbol: 'POKI',
     tokenPrice: '3.21',
     priceChange: 12.8,
-    creatorTokenAddress: '0x789...',
+    tokenAddress: '0x4200000000000000000000000000000000000006', // WETH on Base
     socialLinks: {
       twitch: 'https://twitch.tv/pokimane',
       twitter: 'https://twitter.com/pokimanelol'
@@ -57,7 +57,7 @@ export const mockStreamers = [
     tokenSymbol: 'TFUE',
     tokenPrice: '1.67',
     priceChange: 8.4,
-    creatorTokenAddress: '0xabc...',
+    tokenAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', // USDC on Base
     socialLinks: {
       twitch: 'https://twitch.tv/tfue',
       twitter: 'https://twitter.com/tfue'
@@ -73,7 +73,7 @@ export const mockStreamers = [
     tokenSymbol: 'XQC',
     tokenPrice: '4.56',
     priceChange: -5.7,
-    creatorTokenAddress: '0xdef...',
+    tokenAddress: '0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb', // DAI on Base
     socialLinks: {
       twitch: 'https://twitch.tv/xqcow',
       twitter: 'https://twitter.com/xqc'
@@ -89,7 +89,7 @@ export const mockStreamers = [
     tokenSymbol: 'SYM',
     tokenPrice: '0.89',
     priceChange: 15.3,
-    creatorTokenAddress: '0x321...',
+    tokenAddress: '0x4200000000000000000000000000000000000006', // WETH on Base
     socialLinks: {
       twitch: 'https://twitch.tv/symfuhny',
       twitter: 'https://twitter.com/symfuhny'
