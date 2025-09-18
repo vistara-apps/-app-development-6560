@@ -1,6 +1,7 @@
 import React from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { TrendingUp, Users, Trophy, Menu, ArrowLeft } from 'lucide-react';
+import { AgentKitStatus } from './AgentKitStatus';
 
 export function AppShell({ children, activeTab, onTabChange, selectedStreamer, onClearStreamer }) {
   const tabs = [
@@ -33,6 +34,7 @@ export function AppShell({ children, activeTab, onTabChange, selectedStreamer, o
             </div>
             
             <div className="flex items-center space-x-4">
+              <AgentKitStatus />
               <ConnectButton />
             </div>
           </div>
